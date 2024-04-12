@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { RiLoaderFill } from "react-icons/ri";
+
 import {
   BsFillSunFill,
   BsCloudyFill,
@@ -160,11 +160,11 @@ const WeatherPage: React.FC = () => {
 
               <div className="flex justify-between px-5 bg-zinc-300 sm:gap-20 sm:px-1 sm:justify-around rounded-2xl">
                 <p className="flex items-center text-lg">
-                  <WiRaindrops className="text-[20vw] sm:text-[8vw] " />
+                  <WiRaindrops className="text-[20vw]  sm:text-[8vw] " />
                   {weather.humidity}%
                 </p>
                 <p className="flex items-center gap-5 text-lg">
-                  <LiaWindSolid className="text-[10vw] sm:text-[5vw]" />{" "}
+                  <LiaWindSolid className="text-[10vw] sm:text-[5vw] " />{" "}
                   {weather.wind} m/s
                 </p>
               </div>

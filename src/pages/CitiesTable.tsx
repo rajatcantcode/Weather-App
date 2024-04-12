@@ -25,7 +25,7 @@ function CitiesTable() {
       setLoading(true);
       setPage(page + 1);
       const response = await axios.get(
-        `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-1000/records?select=geoname_id%2Cname%2Ctimezone%2Ccou_name_en&q=${searchTerm}&limit=20&offset=${
+        `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-1000/records?select=geoname_id%2Cname%2Ctimezone%2Ccou_name_en&limit=20&offset=${
           (page + 1) * 20
         }`
       );
@@ -37,7 +37,7 @@ function CitiesTable() {
         console.error("Invalid response format");
       }
     } catch (error) {
-      console.error("Error fetching city data:", error);
+      console.log("Error fetching city data:", error);
     } finally {
       setLoading(false);
     }
@@ -182,7 +182,9 @@ function CitiesTable() {
           })}
         </tbody>
       </motion.table>
-      {loading && <div className="">Loading...</div>}
+      <div className="sticky bottom-0 p-20 bg-white">
+        {loading && <div className="text-center">Loading...</div>}
+      </div>
     </div>
   );
 }

@@ -19,6 +19,8 @@ function CitiesTable() {
   const observer = useRef<IntersectionObserver | null>(null);
   const lastCityElementRef = useRef<HTMLTableRowElement | null>(null);
 
+  const city = useRef();
+
   async function fetchCities() {
     try {
       setLoading(true);
@@ -69,20 +71,39 @@ function CitiesTable() {
     }
   }, [hasMore, loading]);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    setPage(1); // Reset page when a new search term is entered
-    setCities([]); // Clear existing cities when starting a new search
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(city.current.value);
+    const apiKey = "c624a1b68c482efec200eda655c98cca";
+
+    if (city.current.value.length === 0) {
+      fetchCities();
+    } else {
+      const geoCodingResponse = await axios.get(
+        `https://api.openweathermap.org/geo/1.0/direct?q=${city.current.value}&limit=1&appid=${apiKey}`
+      );
+
+      const { lat, lon } = geoCodingResponse.data[0];
+
+      const searchedData = await axios.get(
+        `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}`
+      );
+      console.log(searchedData);
+    }
   };
 
   return (
-    <div className="overflow-x-auto">
-      <input
-        type="text"
-        placeholder="Search city..."
-        value={searchTerm}
-        onChange={handleSearch}
-      />
+    <div className="h-full overflow-x-auto bg-sky-200">
+      <div className="text-center search">
+        <h1 className="mt-10 text-2xl font-semibold">Weather App</h1>
+        <input
+          type="text"
+          className="px-3 my-10 text-lg rounded"
+          placeholder="Search city..."
+          ref={city}
+        />
+        <button onClick={handleSearch}>Search</button>
+      </div>
+
       <motion.table
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -91,9 +112,9 @@ function CitiesTable() {
       >
         <thead>
           <tr>
-            <th className="px-4 py-2">City Name</th>
-            <th className="px-4 py-2">Country</th>
-            <th className="px-4 py-2">Timezone</th>
+            <th className="py-2 ">City Name</th>
+            <th className="py-2 ">Country</th>
+            <th className="py-2 ">Timezone</th>
           </tr>
         </thead>
         <tbody>
@@ -130,10 +151,7 @@ function CitiesTable() {
                   className="hover:bg-gray-100"
                 >
                   <td className="px-4 py-2 text-center">
-                    <Link
-                      to={`/weather/${city.geoname_id}`}
-                      className="text-blue-500 hover:underline"
-                    >
+                    <Link to={`/weather/${city.geoname_id}`} className="">
                       {city.name}
                     </Link>
                   </td>

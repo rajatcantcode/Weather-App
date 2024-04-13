@@ -12,6 +12,9 @@ import { TiWeatherPartlySunny } from "react-icons/ti";
 import { LiaWindSolid } from "react-icons/lia";
 import { WiRaindrops } from "react-icons/wi";
 import { motion } from "framer-motion";
+import { FaRegSnowflake, FaSnowman } from "react-icons/fa";
+import { MdFoggy } from "react-icons/md";
+import { LuTornado } from "react-icons/lu";
 
 interface WeatherData {
   name: string;
@@ -110,19 +113,19 @@ const WeatherPage: React.FC = () => {
                     <BsCloudFog2Fill className="text-blue-300" />
                   )}
                   {weather.type === "Mist" && (
-                    <BsCloudFog2Fill className="text-blue-800" />
+                    <FaRegSnowflake className="text-zinc-200" />
                   )}
                   {weather.type === "Fog" && (
                     <BsCloudFog2Fill className="text-blue-800" />
                   )}
                   {weather.type === "Haze" && (
-                    <BsCloudFog2Fill className="text-blue-800" />
+                    <FaRegSnowflake className="text-zinc-200" />
                   )}
                   {weather.type === "Smoke" && (
-                    <BsCloudFog2Fill className="text-blue-800" />
+                    <MdFoggy className="text-blue-800" />
                   )}
                   {weather.type === "Dust" && (
-                    <BsCloudFog2Fill className="text-blue-800" />
+                    <MdFoggy className="text-blue-800" />
                   )}
                   {weather.type === "Sand" && (
                     <BsCloudFog2Fill className="text-blue-800" />
@@ -134,10 +137,10 @@ const WeatherPage: React.FC = () => {
                     <BsCloudFog2Fill className="text-blue-800" />
                   )}
                   {weather.type === "Tornado" && (
-                    <BsCloudFog2Fill className="text-zinc-600" />
+                    <LuTornado className="text-zinc-600" />
                   )}
                   {weather.type === "Snow" && (
-                    <TiWeatherPartlySunny className="text-zinc-200" />
+                    <FaSnowman className="text-zinc-200" />
                   )}
                 </div>
                 <p

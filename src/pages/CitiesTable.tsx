@@ -9,6 +9,7 @@ function CitiesTable() {
     name: string;
     country: string;
     timezone: string;
+    cou_name_en: string;
   }
 
   const [cities, setCities] = useState<City[]>([]);
@@ -18,7 +19,7 @@ function CitiesTable() {
   const observer = useRef<IntersectionObserver | null>(null);
   const lastCityElementRef = useRef<HTMLTableRowElement | null>(null);
 
-  const city = useRef();
+  const city = useRef<HTMLInputElement>(null);
 
   async function fetchCities() {
     try {
@@ -57,41 +58,44 @@ function CitiesTable() {
     };
 
     observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore) {
-        fetchCities();
-      }
       if (entries[0].isIntersecting) {
-        fetchCities;
+        fetchCities();
       }
     }, options);
 
     if (lastCityElementRef.current) {
       observer.current.observe(lastCityElementRef.current);
     }
-  }, [hasMore, loading]);
+  }, [hasMore, loading, cities]); // Add cities as a dependency to ensure correct pagination
 
   const handleSearch = async () => {
     const apiKey = "c624a1b68c482efec200eda655c98cca";
-    if (city) {
-      if (city.current.value.length === 0) {
-        fetchCities();
-      } else {
-        const geoCodingResponse = await axios.get(
-          `https://api.openweathermap.org/geo/1.0/direct?q=${city.current.value}&limit=1&appid=${apiKey}`
-        );
-
-        const { lat, lon } = geoCodingResponse.data[0];
-
+    if (city.current && city.current.value.length > 0) {
+      try {
         const searchedData = await axios.get(
-          `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}`
+          `https://api.openweathermap.org/data/2.5/weather?q=${city.current.value}&appid=${apiKey}`
         );
-        console.log(searchedData);
+
+        const { coord } = searchedData.data;
+        const { lon, lat } = coord;
+        const searchedData2 = await axios.get(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`
+        );
+
+        const { sys, id, name } = searchedData2.data;
+        const { country, timezone } = sys;
+
+        setCities([
+          { geoname_id: id, name, country, timezone, cou_name_en: name },
+        ]);
+      } catch (error) {
+        console.log("Error fetching city data:", error);
       }
     }
   };
 
   return (
-    <div className="h-full overflow-x-auto bg-sky-200">
+    <div className="h-full overflow-x-auto ">
       <div className="text-center search">
         <motion.h1
           initial={{ opacity: 0, x: 300 }}
@@ -108,7 +112,7 @@ function CitiesTable() {
         >
           <input
             type="text"
-            className="px-3 py-2  w-[20vw] my-10 text-lg rounded"
+            className="px-3 py-2  w-[60vw] sm:w-[20vw] my-10 text-lg rounded"
             placeholder="Search city..."
             ref={city}
           />
@@ -127,7 +131,7 @@ function CitiesTable() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-full border-collapse"
+        className="w-screen border-collapse"
       >
         <thead>
           <tr>
@@ -182,8 +186,15 @@ function CitiesTable() {
           })}
         </tbody>
       </motion.table>
-      <div className="sticky bottom-0 p-20 bg-white">
-        {loading && <div className="text-center">Loading...</div>}
+      <div className="sticky bottom-0 p-20">
+        {loading && (
+          <div className="flex justify-center">
+            <img
+              src="https://media4.giphy.com/media/uOGq4okS4jO9lQIyPj/200.webp?cid=ecf05e476i2p3b0laqo5o507ae0m5s8c56p533lcmgwdyutg&ep=v1_gifs_search&rid=200.webp&ct=g"
+              alt=""
+            />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -46,7 +46,7 @@
   <li>Clone the repository from <a href="https://github.com/vishwajitingole/Weather-App">GitHub Repository URL</a>.</li>
   <li>Navigate to the project directory.</li>
   <li>Run <code>npm install</code> to install dependencies.</li>
-  <li>Start the development server by running <code>npm start</code>.</li>
+  <li>Start the development server by running <code>npm run dev</code>.</li>
   <li>Access the application in your web browser at the provided URL.</li>
 </ol>
 
